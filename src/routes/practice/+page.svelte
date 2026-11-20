@@ -450,7 +450,7 @@
             {t('practice.again')}
           </button>
           <a
-            href={resolve('/report')}
+            href={resolve('/report.html')}
             class="inline-flex min-h-14 items-center rounded-full border-2 border-ink px-7 py-4
                    text-base font-bold text-ink transition hover:bg-ink hover:text-white"
           >

@@ -186,7 +186,7 @@ const lt: LangDict = {
 	"home.hero_sub": "Pasirinkite lygį ir pradėkite.",
 	"home.start": "Pradėti mokytis",
 	"home.clock_aria": "Analoginio laikrodžio skaitmenys, rodantys 10:10",
-	"home.badge": "Neskubėkite",
+	"home.badge": "Nėra ko skubėti",
 	"home.levels_title": "Trys sunkumo lygiai",
 	"home.level_easy": "Lengva",
 	"home.level_easy_desc": "Laikrodis rodo tik laikus, baigiančius :00, :15, :30 ar :45.",

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { base, resolve } from '$app/paths';
+  import { base, resolve } from "$app/paths";
+  import { t } from "$lib/i18n";
 </script>
 
 <footer
@@ -12,12 +13,12 @@
     class="flex items-center gap-2 text-sm text-ink/55 transition hover:text-orange"
   >
     <img src={`${base}/logo.svg`} alt="" class="size-6" />
-    Built by the EdTech-a-thon
+    {t("footer.builtBy")}
   </a>
-  <a href={resolve('/about')} class="text-sm text-ink/55 transition hover:text-orange">
-    about
+  <a href={resolve("/about")} class="text-sm text-ink/55 transition hover:text-orange">
+    {t("nav.about")}
   </a>
-  <a href={resolve('/privacy')} class="text-sm text-ink/55 transition hover:text-orange">
-    privacy
+  <a href={resolve("/privacy")} class="text-sm text-ink/55 transition hover:text-orange">
+    {t("nav.privacy")}
   </a>
 </footer>

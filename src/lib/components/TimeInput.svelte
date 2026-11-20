@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from "$lib/i18n";
+
   type Props = {
     hour: string;
     minute: string;
@@ -8,14 +10,14 @@
 
   let { hour = $bindable(), minute = $bindable(), disabled = false, onsubmit }: Props = $props();
 
-  const canSubmit = $derived(!disabled && hour.trim() !== '' && /^\d{2}$/.test(minute));
+  const canSubmit = $derived(!disabled && hour.trim() !== "" && /^\d{2}$/.test(minute));
 
   // Two boxes rather than one: no punctuation to get wrong, and a number pad on
   // tablets and phones.
   const field =
-    'w-24 rounded-2xl border-2 border-ink/20 bg-white px-3 py-4 text-center text-4xl ' +
-    'font-semibold tabular-nums text-ink focus:border-orange focus:outline-none ' +
-    'disabled:opacity-60 sm:w-28 sm:text-5xl';
+    "w-24 rounded-2xl border-2 border-ink/20 bg-white px-3 py-4 text-center text-4xl " +
+    "font-semibold tabular-nums text-ink focus:border-orange focus:outline-none " +
+    "disabled:opacity-60 sm:w-28 sm:text-5xl";
 </script>
 
 <form
@@ -25,7 +27,7 @@
     if (canSubmit) onsubmit();
   }}
 >
-  <label class="sr-only" for="hour-input">Hour</label>
+  <label class="sr-only" for="hour-input">{t("input.hour")}</label>
   <input
     id="hour-input"
     class={field}
@@ -38,7 +40,7 @@
     {disabled}
   />
   <span class="text-4xl font-semibold text-ink/50 sm:text-5xl">:</span>
-  <label class="sr-only" for="minute-input">Minute</label>
+  <label class="sr-only" for="minute-input">{t("input.minute")}</label>
   <input
     id="minute-input"
     class={field}
@@ -57,6 +59,6 @@
            focus-visible:outline-orange disabled:opacity-40"
     disabled={!canSubmit}
   >
-    Check
+    {t("input.check")}
   </button>
 </form>

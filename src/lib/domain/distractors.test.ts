@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildOptions } from "./distractors";
 import { minutesForLevel } from "./time";
 import { explain } from "./feedback";
+import { setLanguage } from "$lib/i18n";
 
 describe.each(["easy", "medium", "hard"] as const)(
   "%s Distractors",
@@ -40,6 +41,7 @@ describe.each(["easy", "medium", "hard"] as const)(
     });
 
     it("helps with both hands when both the hour and minute are wrong", () => {
+      setLanguage("en");
       const feedback = explain("hour-and-minute", { hour: 12, minute: 55 });
       expect(feedback).toContain("short hand");
       expect(feedback).toContain("long minute hand");
@@ -49,6 +51,7 @@ describe.each(["easy", "medium", "hard"] as const)(
 );
 
 it("explains individual ticks for combined mistakes between five-minute marks", () => {
+  setLanguage("en");
   const feedback = explain("hour-and-minute", { hour: 6, minute: 28 });
   expect(feedback).toContain("short hand");
   expect(feedback).toContain("count the small ticks");

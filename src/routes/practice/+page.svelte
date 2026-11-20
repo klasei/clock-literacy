@@ -21,26 +21,15 @@
     type AnsweredQuestion,
     type CompletedRound
   } from '$lib/storage';
+  import { t } from '$lib/i18n';
 
   type Phase = 'setup' | 'asking' | 'checking' | 'results';
 
-  const levels: { id: Level; name: string; blurb: string }[] = [
-    {
-      id: 'easy',
-      name: 'Easy',
-      blurb: 'Questions and answers use times ending in :00, :15, :30, or :45, like 2:00 and 2:15.'
-    },
-    {
-      id: 'medium',
-      name: 'Medium',
-      blurb: 'Questions and answers use times in 5-minute steps, like 2:05, 2:10, and 2:15.'
-    },
-    {
-      id: 'hard',
-      name: 'Hard',
-      blurb: 'Questions and answers can use any minute, like 2:07 or 2:43.'
-    }
-  ];
+  const levels: { id: Level }[] = [{ id: 'easy' }, { id: 'medium' }, { id: 'hard' }];
+  const levelName = (id: Level) =>
+    t(id === 'easy' ? 'practice.level_easy' : id === 'medium' ? 'practice.level_medium' : 'practice.level_hard');
+  const levelBlurb = (id: Level) =>
+    t(id === 'easy' ? 'practice.level_easy_blurb' : id === 'medium' ? 'practice.level_medium_blurb' : 'practice.level_hard_blurb');
   const lengths: RoundLength[] = [5, 10, 20];
 
   // A shared link like /practice?level=hard preselects a Level. The pages are
@@ -178,11 +167,11 @@
     // Say what is wrong rather than doing nothing: a Check button that appears
     // broken teaches the student that they broke it.
     if (!Number.isInteger(hour) || hour < 1 || hour > 12) {
-      inputProblem = 'The hour needs to be a number from 1 to 12.';
+      inputProblem = t('practice.hour_error');
       return;
     }
     if (!Number.isInteger(minute) || minute < 0 || minute > 59) {
-      inputProblem = 'The minutes need to be a number from 00 to 59.';
+      inputProblem = t('practice.minute_error');
       return;
     }
     inputProblem = null;
@@ -221,7 +210,7 @@
   const optionLabel = (option: Option) => formatTime(option.time);
 </script>
 
-<Seo title="Practice — Clock Literacy" />
+<Seo title={t('practice.seo_title')} />
 
 <dialog
   bind:this={resumeDialog}
@@ -231,14 +220,13 @@
   class="m-auto w-[calc(100%-2.5rem)] max-w-lg rounded-3xl border border-ink/15 bg-cream p-7 text-ink shadow-xl backdrop:bg-ink/45"
 >
   {#if pending}
-    <h2 id="resume-title" class="text-2xl font-bold">Resume your round?</h2>
+    <h2 id="resume-title" class="text-2xl font-bold">{t('practice.resume_title')}</h2>
     <p id="resume-progress" class="mt-4 text-lg text-ink/70">
-      {levels.find(option => option.id === pending?.round.level)?.name} level ·
-      {pending.answers.length} of {pending.round.questions.length} questions completed
+      {t('practice.resume_body', { level: levelName(pending?.round.level ?? 'easy'), answered: pending.answers.length, total: pending.round.questions.length })}
     </p>
     <div class="mt-7 flex flex-wrap gap-3">
-      <button type="button" class="min-h-14 rounded-full bg-orange px-6 py-3 font-bold text-white focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink" onclick={resume}>Yes, resume</button>
-      <button type="button" class="min-h-14 rounded-full border-2 border-ink/20 px-6 py-3 font-bold focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink" onclick={declineResume}>No, start a new round</button>
+      <button type="button" class="min-h-14 rounded-full bg-orange px-6 py-3 font-bold text-white focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink" onclick={resume}>{t('practice.resume_yes')}</button>
+      <button type="button" class="min-h-14 rounded-full border-2 border-ink/20 px-6 py-3 font-bold focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink" onclick={declineResume}>{t('practice.resume_no')}</button>
     </div>
   {/if}
 </dialog>
@@ -248,7 +236,7 @@
     <Header>
       {#if phase === 'asking' || phase === 'checking'}
         <p class="text-sm font-semibold text-ink/60 tabular-nums">
-          Question {index + 1} of {round?.questions.length}
+          {t('practice.question_of', { n: index + 1, total: round?.questions.length })}
         </p>
       {/if}
     </Header>
@@ -256,7 +244,7 @@
     {#if phase === 'setup'}
       <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col py-10">
         <h1 class="text-[clamp(2rem,5vw,3.5rem)] leading-tight font-semibold tracking-tight">
-          What level practice do you want?
+          {t('practice.level_title')}
         </h1>
 
         <div class="mt-8 grid gap-3 sm:grid-cols-3">
@@ -270,13 +258,13 @@
               aria-pressed={level === option.id}
               onclick={() => (level = option.id)}
             >
-              <span class="block text-xl font-bold">{option.name}</span>
-              <span class="mt-1 block text-sm leading-snug text-ink/60">{option.blurb}</span>
+              <span class="block text-xl font-bold">{levelName(option.id)}</span>
+              <span class="mt-1 block text-sm leading-snug text-ink/60">{levelBlurb(option.id)}</span>
             </button>
           {/each}
         </div>
 
-        <h2 class="mt-10 text-lg font-semibold">How many questions?</h2>
+        <h2 class="mt-10 text-lg font-semibold">{t('practice.how_many')}</h2>
         <div class="mt-3 flex flex-wrap gap-3">
           {#each lengths as option (option)}
             <button
@@ -301,7 +289,7 @@
                    focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink"
             onclick={start}
           >
-            Start practicing
+            {t('practice.start')}
           </button>
         </div>
       </section>
@@ -311,7 +299,7 @@
           {#if phase === 'checking' && question}
             <div class="mt-5 w-full text-center" role="status" aria-live="polite">
               {#if wasCorrect}
-                <p class="text-2xl font-bold text-ink">Yes — {formatTime(question.time)}</p>
+                <p class="text-2xl font-bold text-ink">{t('practice.correct', { time: formatTime(question.time) })}</p>
               {:else}
                 <div class="rounded-3xl border-2 border-orange/35 bg-white p-5 text-left">
                   {#if picked}
@@ -321,13 +309,13 @@
                       </div>
                     {/if}
                     <p class="mb-3 text-xl font-bold tabular-nums">
-                      Your answer:
+                      {t('practice.your_answer')}
                       <span class="relative inline-block pt-4 {picked.hour === question.time.hour ? 'text-sky-700' : 'text-orange-700'}">
-                        <span class="sr-only">Hour: </span>{picked.hour}<sup class="absolute inset-x-0 top-0 text-center text-xs leading-none" aria-hidden="true">{picked.hour === question.time.hour ? '✓' : '✗'}</sup>
-                        <span class="sr-only">{picked.hour === question.time.hour ? 'correct' : 'incorrect'}</span>
+                        <span class="sr-only">{t('practice.hour_sronly')}</span>{picked.hour}<sup class="absolute inset-x-0 top-0 text-center text-xs leading-none" aria-hidden="true">{picked.hour === question.time.hour ? '✓' : '✗'}</sup>
+                        <span class="sr-only">{picked.hour === question.time.hour ? t('practice.hand_correct') : t('practice.hand_incorrect')}</span>
                       </span>:<span class="relative inline-block pt-4 {picked.minute === question.time.minute ? 'text-sky-700' : 'text-orange-700'}">
-                        <span class="sr-only">Minutes: </span>{String(picked.minute).padStart(2, '0')}<sup class="absolute inset-x-0 top-0 text-center text-xs leading-none" aria-hidden="true">{picked.minute === question.time.minute ? '✓' : '✗'}</sup>
-                        <span class="sr-only">{picked.minute === question.time.minute ? 'correct' : 'incorrect'}</span>
+                        <span class="sr-only">{t('practice.minutes_sronly')}</span>{String(picked.minute).padStart(2, '0')}<sup class="absolute inset-x-0 top-0 text-center text-xs leading-none" aria-hidden="true">{picked.minute === question.time.minute ? '✓' : '✗'}</sup>
+                        <span class="sr-only">{picked.minute === question.time.minute ? t('practice.hand_correct') : t('practice.hand_incorrect')}</span>
                       </span>
                     </p>
                   {/if}
@@ -342,7 +330,7 @@
                     data-continue
                     onclick={advance}
                   >
-                    Got it
+                    {t('practice.got_it')}
                   </button>
                 </div>
               {/if}
@@ -351,7 +339,7 @@
         {/snippet}
 
         {#if question.direction === 'clock-to-time'}
-          <h1 class="text-center text-2xl font-semibold sm:text-3xl">What time is it?</h1>
+          <h1 class="text-center text-2xl font-semibold sm:text-3xl">{t('practice.what_time')}</h1>
 
           <!-- Keep feedback outside the centered grid so answers stay in place. -->
           <div class="mx-auto mt-4 grid w-full max-w-4xl items-center gap-6 lg:mt-8 lg:grid-cols-2 lg:gap-10">
@@ -398,8 +386,7 @@
           </div>
         {:else}
           <h1 class="text-center text-2xl font-semibold sm:text-3xl">
-            Which clock shows
-            <span class="text-orange tabular-nums">{formatTime(question.time)}</span>?
+            {t('practice.which_clock', { time: formatTime(question.time) })}
           </h1>
 
           <div class="mx-auto mt-5 grid w-full max-w-2xl grid-cols-2 gap-4 lg:mt-8 xl:max-w-4xl xl:grid-cols-4">
@@ -407,7 +394,7 @@
               <button
                 type="button"
                 disabled={phase === 'checking'}
-                aria-label="Clock {position + 1} of {question.options?.length}"
+                aria-label={t('practice.clock_aria', { n: position + 1, total: question.options?.length })}
                 class="rounded-3xl border-2 bg-white p-2 transition
                        {phase === 'checking' && sameTime(option.time, question.time)
                   ? 'border-mint'
@@ -429,11 +416,11 @@
     {:else if phase === 'results'}
       <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-10">
         <h1 class="text-[clamp(2rem,5vw,3.5rem)] leading-tight font-semibold tracking-tight">
-          {rightSoFar} out of {answers.length}
+          {t('practice.score', { right: rightSoFar, total: answers.length })}
         </h1>
 
         {#if missed.length > 0}
-          <h2 class="mt-8 text-lg font-semibold">The ones to look at again</h2>
+          <h2 class="mt-8 text-lg font-semibold">{t('practice.review_title')}</h2>
           <div class="mt-4 grid grid-cols-2 gap-5 sm:grid-cols-4">
             {#each missed as miss (miss.time.hour + ':' + miss.time.minute)}
               <div>
@@ -443,14 +430,14 @@
                 </p>
                 {#if miss.answer}
                   <p class="text-center text-sm text-ink/55 tabular-nums">
-                    you said {formatTime(miss.answer)}
+                    {t('practice.you_said', { time: formatTime(miss.answer) })}
                   </p>
                 {/if}
               </div>
             {/each}
           </div>
         {:else}
-          <p class="mt-4 text-xl text-ink/70">Every one right. That's the whole round.</p>
+          <p class="mt-4 text-xl text-ink/70">{t('practice.all_correct')}</p>
         {/if}
 
         <div class="mt-10 flex flex-wrap gap-3">
@@ -460,20 +447,20 @@
                    transition hover:-translate-y-0.5"
             onclick={() => (phase = 'setup')}
           >
-            Practice again
+            {t('practice.again')}
           </button>
           <a
             href={resolve('/report')}
             class="inline-flex min-h-14 items-center rounded-full border-2 border-ink px-7 py-4
                    text-base font-bold text-ink transition hover:bg-ink hover:text-white"
           >
-            Print my report
+            {t('practice.print_report')}
           </a>
         </div>
 
         {#if previous}
           <p class="mt-5 text-sm text-ink/60">
-            You didn't print your last round. It's still here if you want it.
+            {t('practice.unprinted')}
           </p>
         {/if}
       </section>

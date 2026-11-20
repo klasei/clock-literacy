@@ -2,6 +2,7 @@
   import { formatTime } from "$lib/domain/time";
   import { handAngles } from "$lib/domain/angles";
   import type { ClockTime } from "$lib/domain/types";
+  import { t } from "$lib/i18n";
 
   type Props = {
     time: ClockTime;
@@ -69,8 +70,8 @@
     const next = (at.hour % 12) + 1;
     const hourHand =
       at.minute === 0
-        ? `The hour hand points at the ${at.hour}.`
-        : `The hour hand is between the ${at.hour} and the ${next}.`;
+        ? t("clockface.hour_pointing", { num: at.hour })
+        : t("clockface.hour_between", { hour: at.hour, next });
 
     const before =
       Math.floor(at.minute / 5) === 0 ? 12 : Math.floor(at.minute / 5);
@@ -78,10 +79,10 @@
       Math.ceil(at.minute / 5) === 0 ? 12 : Math.ceil(at.minute / 5);
     const minuteHand =
       at.minute % 5 === 0
-        ? `The minute hand points at the ${at.minute === 0 ? 12 : at.minute / 5}.`
-        : `The minute hand is between the ${before} and the ${after}.`;
+        ? t("clockface.minute_pointing", { num: at.minute === 0 ? 12 : at.minute / 5 })
+        : t("clockface.minute_between", { before, after });
 
-    return `An analog clock. ${hourHand} ${minuteHand}`;
+    return `${t("clockface.describe_prefix")} ${hourHand} ${minuteHand}`;
   }
 </script>
 
@@ -90,7 +91,12 @@
   class="block h-auto w-full"
   role="img"
   aria-label={comparison
-    ? `Your answer: ${formatTime(comparison)}. Correct time: ${formatTime(time)}. Hour ${comparison.hour === time.hour ? "correct" : "incorrect"}. Minutes ${comparison.minute === time.minute ? "correct" : "incorrect"}. Colored hands show your answer; black hands show the correct positions.`
+    ? t("clockface.answer", {
+        answer: formatTime(comparison),
+        correct: formatTime(time),
+        hour_status: comparison.hour === time.hour ? t("clockface.hand_correct") : t("clockface.hand_incorrect"),
+        minute_status: comparison.minute === time.minute ? t("clockface.hand_correct") : t("clockface.hand_incorrect"),
+      })
     : describe(time)}
 >
   <circle

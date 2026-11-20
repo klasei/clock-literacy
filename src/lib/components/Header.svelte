@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import type { Snippet } from "svelte";
+  import { t } from "$lib/i18n";
 
   let { children }: { children?: Snippet } = $props();
 </script>
@@ -9,7 +10,7 @@
   <a
     href={resolve("/")}
     class="group flex items-center gap-3 font-semibold tracking-tight"
-    aria-label="Clock Literacy home"
+    aria-label={t("brand.home")}
   >
     <span
       class="grid size-9 place-items-center rounded-full bg-ink text-cream transition-transform group-hover:-rotate-6"
@@ -32,7 +33,7 @@
         />
       </svg>
     </span>
-    <span>Clock Literacy</span>
+    <span>{t("brand.name")}</span>
   </a>
   {@render children?.()}
 </header>

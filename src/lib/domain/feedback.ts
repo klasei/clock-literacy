@@ -1,6 +1,7 @@
 import { hourSlip, swappedHands } from "./distractors";
 import { formatTime, sameTime } from "./time";
 import type { ClockTime, DistractorKind, Level } from "./types";
+import { t } from "$lib/i18n";
 
 /**
  * Work out which mistake a typed answer represents, so a Hard Question can give
@@ -32,27 +33,39 @@ function nextHour(hour: number): number {
 
 /** Explain the relevant hands using the numbers on this Question's Clock Face. */
 export function explain(kind: DistractorKind | null, time: ClockTime): string {
-  const answer = `The time is ${formatTime(time)}.`;
+  const answer = t("feedback.time_is", { time: formatTime(time) });
   const hourAdvice =
     time.minute === 0
-      ? `The short hand points to ${time.hour}, so the hour is ${time.hour}.`
-      : `The short hand is between ${time.hour} and ${nextHour(time.hour)}. It has passed ${time.hour}, so the hour is still ${time.hour}.`;
+      ? t("feedback.hour_on_hour", { hour: time.hour })
+      : t("feedback.hour_between", {
+          hour: time.hour,
+          next: nextHour(time.hour),
+        });
 
   let minuteAdvice: string;
   if (time.minute === 0) {
-    minuteAdvice = "The long minute hand points to 12. That means 00 minutes.";
+    minuteAdvice = t("feedback.minute_on_12");
   } else if (time.minute % 5 === 0) {
-    minuteAdvice = `The long minute hand points to ${time.minute / 5}. Each number is 5 minutes, so count by fives from 12 to get ${time.minute} minutes.`;
+    minuteAdvice = t("feedback.minute_fives", {
+      num: time.minute / 5,
+      minute: time.minute,
+    });
   } else {
     const wholeFives = Math.floor(time.minute / 5);
     const ticks = time.minute % 5;
     const startNumber = wholeFives === 0 ? 12 : wholeFives;
-    minuteAdvice = `The long minute hand is ${ticks} small ${ticks === 1 ? "tick" : "ticks"} past ${startNumber}. Start at ${wholeFives * 5} minutes and count the small ticks: add ${ticks} to get ${time.minute} minutes.`;
+    minuteAdvice = t("feedback.minute_ticks", {
+      ticks,
+      ticks_word: ticks === 1 ? t("feedback.tick_one") : t("feedback.tick_many"),
+      start: startNumber,
+      whole: wholeFives * 5,
+      minute: time.minute,
+    });
   }
 
   if (kind === "hour-slip") return `${hourAdvice} ${answer}`;
   if (kind === "swapped-hands") {
-    return `The short hand shows the hour; the long hand shows the minutes. ${hourAdvice} ${minuteAdvice} ${answer}`;
+    return `${t("feedback.swapped_prefix")} ${hourAdvice} ${minuteAdvice} ${answer}`;
   }
   if (kind === "hour-and-minute" || kind === null) {
     return `${hourAdvice} ${minuteAdvice} ${answer}`;

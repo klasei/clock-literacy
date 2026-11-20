@@ -15,11 +15,12 @@
     unprintedPreviousRound,
     type CompletedRound
   } from '$lib/storage';
+  import { t } from '$lib/i18n';
 
   /** Six misses is what fits on one page alongside the header. */
   const MAX_SHOWN = 6;
 
-  const levelNames = { easy: 'Easy', medium: 'Medium', hard: 'Hard' } as const;
+  const levelName = (lvl: Level) => t(lvl === 'easy' ? 'report.level_easy' : lvl === 'medium' ? 'report.level_medium' : 'report.level_hard');
 
   let current = $state<CompletedRound | null>(null);
   let earlier = $state<CompletedRound | null>(null);
@@ -40,8 +41,8 @@
   const shown = $derived(misses.slice(0, MAX_SHOWN));
 
   function answerFormat(level: Level, direction: Direction): string {
-    if (direction === 'time-to-clock') return 'Multiple choice (clock)';
-    return level === 'hard' ? 'Typed input' : 'Multiple choice (time)';
+    if (direction === 'time-to-clock') return t('report.choice_clock');
+    return level === 'hard' ? t('report.typed') : t('report.choice_time');
   }
 
   const finishedOn = $derived(
@@ -70,36 +71,36 @@
   }
 </script>
 
-<Seo title="Practice report — Clock Literacy" />
+<Seo title={t('report.seo_title')} />
 
 <main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12 print:bg-white print:p-0">
   <div class="no-print mx-auto mb-6 max-w-7xl">
     <Header>
       <a href={resolve('/practice')} class="text-sm font-semibold text-ink/60 hover:text-ink">
-        Back to practice
+        {t('report.back')}
       </a>
     </Header>
   </div>
   <div class="mx-auto max-w-3xl">
 
     {#if !loaded}
-      <p class="text-ink/60">Loading your round…</p>
+      <p class="text-ink/60">{t('report.loading')}</p>
     {:else if !round}
-      <h1 class="text-3xl font-semibold tracking-tight">Nothing to report yet</h1>
+      <h1 class="text-3xl font-semibold tracking-tight">{t('report.empty_title')}</h1>
       <p class="mt-3 text-lg text-ink/70">
-        Finish a round of practice and it will show up here, ready to print.
+        {t('report.empty_body')}
       </p>
       <a
         href={resolve('/practice')}
         class="mt-7 inline-flex min-h-14 items-center rounded-full bg-orange px-7 py-4
                text-base font-bold text-white"
       >
-        Start practicing
+        {t('report.start')}
       </a>
     {:else}
       <div class="no-print mb-7 rounded-3xl border-2 border-ink/15 bg-white p-5">
         <label class="block text-sm font-bold tracking-wide text-ink/60" for="student-name">
-          Your name
+          {t('report.name_label')}
         </label>
         <input
           id="student-name"
@@ -107,7 +108,7 @@
                  focus:border-orange focus:outline-none"
           type="text"
           autocomplete="name"
-          placeholder="Type your name"
+          placeholder={t('report.name_placeholder')}
           bind:value={name}
         />
 
@@ -119,7 +120,7 @@
                      {showing === 'current' ? 'border-ink bg-ink text-white' : 'border-ink/20'}"
               onclick={() => (showing = 'current')}
             >
-              This round
+              {t('report.this_round')}
             </button>
             <button
               type="button"
@@ -127,8 +128,7 @@
                      {showing === 'earlier' ? 'border-ink bg-ink text-white' : 'border-ink/20'}"
               onclick={() => (showing = 'earlier')}
             >
-              Your last round ({levelNames[earlier.level]}, {score(earlier)}/{earlier.answers
-                .length})
+              {t('report.last_round', { level: levelName(earlier.level), score: score(earlier), total: earlier.answers.length })}
             </button>
           </div>
         {/if}
@@ -139,7 +139,7 @@
                  transition hover:-translate-y-0.5"
           onclick={print}
         >
-          Print / Save as PDF
+          {t('report.print')}
         </button>
       </div>
 
@@ -148,25 +148,25 @@
         <header class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-ink pb-4">
           <div>
             <p class="text-xs font-bold tracking-[0.2em] text-ink/50 uppercase">
-              Clock Literacy · Practice report
+              {t('report.header_brand')}
             </p>
             <h1 class="mt-1 text-3xl font-semibold tracking-tight">
-              {name.trim() || 'Name: ________________'}
+              {name.trim() || t('report.name_blank')}
             </h1>
           </div>
           <p class="text-right text-sm font-semibold text-ink/70">
             {finishedOn}<br />
-            {levelNames[round.level]} · {round.answers.length} questions
+            {t('report.level_questions', { level: levelName(round.level), total: round.answers.length })}
           </p>
         </header>
 
         <p class="mt-6 text-5xl font-semibold tabular-nums">
-          {score(round)} <span class="text-ink/45">out of {round.answers.length}</span>
+          {score(round)} <span class="text-ink/45">{t('report.out_of', { n: round.answers.length })}</span>
         </p>
 
         {#if correctAnswers.length > 0}
           <section class="mt-6 break-inside-avoid">
-            <h2 class="text-base font-bold tracking-wide">Questions answered correctly</h2>
+            <h2 class="text-base font-bold tracking-wide">{t('report.correct_section')}</h2>
             <ul class="mt-2 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2 print:grid-cols-2">
               {#each correctAnswers as answer (answer.time.hour + ':' + answer.time.minute)}
                 <li>
@@ -179,7 +179,7 @@
         {/if}
 
         {#if shown.length > 0}
-          <h2 class="mt-8 text-base font-bold tracking-wide">Questions to look at again</h2>
+          <h2 class="mt-8 text-base font-bold tracking-wide">{t('report.review_section')}</h2>
           <div class="mt-4 grid grid-cols-3 gap-6">
             {#each shown as miss (miss.time.hour + ':' + miss.time.minute)}
               <div>
@@ -192,7 +192,7 @@
                 </p>
                 {#if miss.answer}
                   <p class="text-center text-xs text-ink/60 tabular-nums">
-                    answered {formatTime(miss.answer)}
+                    {t('report.answered', { time: formatTime(miss.answer) })}
                   </p>
                 {/if}
               </div>
@@ -200,11 +200,11 @@
           </div>
           {#if misses.length > shown.length}
             <p class="mt-4 text-sm text-ink/60">
-              and {misses.length - shown.length} more
+              {t('report.more', { n: misses.length - shown.length })}
             </p>
           {/if}
         {:else}
-          <p class="mt-6 text-lg">Every question correct.</p>
+          <p class="mt-6 text-lg">{t('report.all_correct')}</p>
         {/if}
       </article>
     {/if}

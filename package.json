@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@eslint/js": "latest",
-    "@sveltejs/adapter-vercel": "^6.3.4",
+    "@sveltejs/adapter-static": "^3.0.11",
     "@sveltejs/kit": "latest",
     "@sveltejs/vite-plugin-svelte": "latest",
     "@tailwindcss/vite": "latest",

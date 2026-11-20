@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { base } from "$app/paths";
+  import { t } from "$lib/i18n";
 
   type Props = { title: string; description?: string };
 
@@ -28,17 +29,14 @@
   <link rel="canonical" href={canonical} />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Clock Literacy" />
+  <meta property="og:site_name" content={t("brand.name")} />
   <meta property="og:title" content={title} />
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={image} />
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta
-    property="og:image:alt"
-    content="Clock Literacy: practice reading an analog clock, beside a clock face showing ten past ten."
-  />
+  <meta property="og:image:alt" content={t("seo.og_image_alt")} />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />

@@ -76,7 +76,7 @@
 <main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12 print:bg-white print:p-0">
   <div class="no-print mx-auto mb-6 max-w-7xl">
     <Header>
-      <a href={resolve('/practice.html')} class="text-sm font-semibold text-ink/60 hover:text-ink">
+      <a href={resolve('/practice')} class="text-sm font-semibold text-ink/60 hover:text-ink">
         {t('report.back')}
       </a>
     </Header>
@@ -91,7 +91,7 @@
         {t('report.empty_body')}
       </p>
       <a
-        href={resolve('/practice.html')}
+        href={resolve('/practice')}
         class="mt-7 inline-flex min-h-14 items-center rounded-full bg-orange px-7 py-4
                text-base font-bold text-white"
       >

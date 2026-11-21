@@ -32,7 +32,7 @@
 
         <div class="mt-5">
           <a
-            href={resolve("/practice.html")}
+            href={resolve("/practice")}
             class="group inline-flex min-h-11 items-center gap-3 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(23,37,44,0.16)] transition hover:-translate-y-0.5 hover:bg-orange focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange">
             {t("home.start")}
             <span

@@ -15,10 +15,10 @@
     <img src={`${base}/logo.svg`} alt="" class="size-6" />
     {t("footer.builtBy")}
   </a>
-  <a href={resolve("/about.html")} class="text-sm text-ink/55 transition hover:text-orange">
+  <a href={resolve("/about")} class="text-sm text-ink/55 transition hover:text-orange">
     {t("nav.about")}
   </a>
-  <a href={resolve("/privacy.html")} class="text-sm text-ink/55 transition hover:text-orange">
+  <a href={resolve("/privacy")} class="text-sm text-ink/55 transition hover:text-orange">
     {t("nav.privacy")}
   </a>
 </footer>

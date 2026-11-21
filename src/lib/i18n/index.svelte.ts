@@ -201,17 +201,17 @@ const lt: LangDict = {
 	"home.report_body": "Išsaugokite praktikos ataskaitą PDF formatu, jeigu norite ją nusiųsti mokytojui.",
 
 	"practice.level_title": "Pasirinkite lygį",
-	"practice.level_easy": "Lengva",
+	"practice.level_easy": "Lengvas",
 	"practice.level_easy_blurb":
-		"Klausimai ir atsakymai naudoja tik :00, :15, :30 arba :45 laiką, pavyzdžiui, 2:00 ir 2:15.",
-	"practice.level_medium": "Vidutiniškai",
+		"Klausimai ir atsakymai :00, :15, :30 arba :45 laiką, pavyzdžiui, 2:00 ir 2:15.",
+	"practice.level_medium": "Vidutinis",
 	"practice.level_medium_blurb":
-		"Klausimai ir atsakymai naudoja tik laiką 5 minučių žingsniais, pavyzdžiui, 2:05, 2:10 ir 2:15.",
-	"practice.level_hard": "Sunku",
+		"Klausimai ir atsakymai 5 minučių žingsniais, pavyzdžiui, 2:05, 2:10 ir 2:15.",
+	"practice.level_hard": "Sunkus",
 	"practice.level_hard_blurb":
 		"Klausimai ir atsakymai gali naudoti bet kokį laiką, pavyzdžiui, 2:07 ar 2:43.",
 	"practice.how_many": "Kiek klausimų?",
-	"practice.start": "Pradėti mokytis",
+	"practice.start": "Pradėti",
 	"practice.question_of": "Klausimas {n} iš {total}",
 	"practice.resume_title": "Tęsti užduotį?",
 	"practice.resume_body": "{level} · atlikta {answered} iš {total} klausimų",
